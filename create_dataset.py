@@ -85,17 +85,75 @@ def get_recent_files_from_git(pattern: str = "*newsletters/*.md",
 
 
 def parse_front_matter(content: str) -> Dict:
-    """YAML front matter 파싱"""
+    """YAML front matter 파싱 (posts 배열 포함)"""
     front_matter = {}
     
     # --- 사이의 내용 추출
     match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
-    if match:
-        yaml_content = match.group(1)
-        for line in yaml_content.split('\n'):
-            if ':' in line:
-                key, value = line.split(':', 1)
-                front_matter[key.strip()] = value.strip().strip('"')
+    if not match:
+        return front_matter
+    
+    yaml_content = match.group(1)
+    lines = yaml_content.split('\n')
+    
+    current_key = None
+    current_list = []
+    current_item = {}
+    in_list = False
+    
+    for line in lines:
+        line_stripped = line.strip()
+        
+        if not line_stripped:
+            continue
+        
+        # 리스트 아이템 시작 (- 로 시작)
+        if line_stripped.startswith('- '):
+            if current_item:
+                current_list.append(current_item)
+            current_item = {}
+            # - 다음에 key: value가 올 수 있음
+            rest = line_stripped[2:].strip()
+            if ':' in rest:
+                k, v = rest.split(':', 1)
+                current_item[k.strip()] = v.strip().strip('"').strip("'")
+        # 들여쓰기된 키:값 (리스트 아이템의 속성)
+        elif line.startswith('  ') and ':' in line_stripped:
+            k, v = line_stripped.split(':', 1)
+            k = k.strip()
+            v = v.strip().strip('"').strip("'")
+            
+            # tags 같은 배열 처리
+            if v.startswith('[') and v.endswith(']'):
+                v = [item.strip().strip('"').strip("'") for item in v[1:-1].split(',') if item.strip()]
+            
+            current_item[k] = v
+        # 일반 키:값
+        elif ':' in line_stripped and not line.startswith('  '):
+            # 이전 리스트 마무리
+            if current_item:
+                current_list.append(current_item)
+                current_item = {}
+            if current_list and current_key:
+                front_matter[current_key] = current_list
+                current_list = []
+            
+            k, v = line_stripped.split(':', 1)
+            current_key = k.strip()
+            v = v.strip().strip('"').strip("'")
+            
+            # 빈 값이면 리스트 시작일 수 있음
+            if not v:
+                in_list = True
+            else:
+                front_matter[current_key] = v
+                current_key = None
+    
+    # 마지막 아이템 처리
+    if current_item:
+        current_list.append(current_item)
+    if current_list and current_key:
+        front_matter[current_key] = current_list
     
     return front_matter
 
@@ -107,45 +165,28 @@ def parse_newsletter_file(file_path: Path) -> List[Dict]:
     
     # Front matter 파싱
     front_matter = parse_front_matter(content)
-    newsletter_type = front_matter.get('type', 'unknown')
     
-    posts = []
+    # Front matter에 posts가 있으면 그걸 사용
+    if 'posts' in front_matter and isinstance(front_matter['posts'], list):
+        posts = []
+        newsletter_type = front_matter.get('type', 'unknown')
+        
+        for post in front_matter['posts']:
+            post_data = {
+                'file': str(file_path),
+                'title': post.get('title', ''),
+                'url': post.get('url', ''),
+                'image': post.get('image', ''),
+                'date': post.get('date', ''),
+                'newsletter_type': newsletter_type,
+                'tags': post.get('tags', [])
+            }
+            posts.append(post_data)
+        
+        return posts
     
-    # 정규식으로 포스트 블록 추출
-    # grid-item과 featured-post 모두 찾기
-    
-    # grid-item 패턴
-    grid_pattern = r'<div class="grid-item">.*?<a href="([^"]+)">.*?<img src="([^"]+)" alt="([^"]+)">.*?</a>.*?<h3>.*?</h3>.*?<p class="post-date">([^<]+)</p>.*?</div>'
-    grid_matches = re.findall(grid_pattern, content, re.DOTALL)
-    
-    for url, image, title, date in grid_matches:
-        posts.append({
-            'file': str(file_path),
-            'image': image.strip(),
-            'title': title.strip(),
-            'date': date.strip(),
-            'url': url.strip(),
-            'newsletter_type': newsletter_type,
-            'tags': []  # 기본값
-        })
-    
-    # featured-post 패턴 (wide-section에 있는 것은 자동으로 featured tag)
-    featured_pattern = r'<div class="featured-post">.*?<a href="([^"]+)">.*?<img src="([^"]+)" alt="([^"]+)">.*?</a>.*?<h2>.*?</h2>.*?<p class="post-date">([^<]+)</p>'
-    featured_matches = re.findall(featured_pattern, content, re.DOTALL)
-    
-    for url, image, title, date in featured_matches:
-        # featured post를 맨 앞에 추가하고 'featured' tag 자동 추가
-        posts.insert(0, {
-            'file': str(file_path),
-            'image': image.strip(),
-            'title': title.strip(),
-            'date': date.strip(),
-            'url': url.strip(),
-            'newsletter_type': newsletter_type,
-            'tags': ['featured']  # wide-section에 있으면 featured
-        })
-    
-    return posts
+    # Front matter에 posts가 없으면 빈 리스트 반환
+    return []
 
 
 def assign_layout_types(posts: List[Dict], grid_size: int = 4) -> List[Dict]:

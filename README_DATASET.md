@@ -16,19 +16,45 @@ Newsletter 파일들을 파싱하여 JSON 형식의 데이터셋을 생성하는
 
 ## 사용법
 
+## Newsletter 파일 형식
+
+Front matter에 posts 배열로 포스트 정보를 저장:
+
+```yaml
+---
+layout: newsletter
+title: "Weekly Newsletter"
+date: 2025-10-21
+type: blog
+posts:
+  - title: "Featured Post"
+    url: "https://github.com/..."
+    image: "/assets/images/..."
+    date: "2025-10-21T10:00:00Z"
+    tags: ["featured"]
+  - title: "Regular Post"
+    url: "https://github.com/..."
+    image: "/assets/images/..."
+    date: "2025-10-20T10:00:00Z"
+    tags: []
+---
+
+Newsletter content...
+```
+
 ## 사용법
 
 ### 기본 사용
 
 ```bash
 # 레이아웃이 할당된 데이터셋 생성
-python3 create_dataset.py -l 6 --assign-layout
+python3 create_dataset.py -d _newsletters --no-git --assign-layout
 
-# 2024-10-01 이후 추가된 파일만
-python3 create_dataset.py -s 2024-10-01 --assign-layout
+# 특정 개수만
+python3 create_dataset.py -d _newsletters --no-git -l 6 --assign-layout
 
 # Grid 크기 커스터마이징
-python3 create_dataset.py -l 10 --assign-layout -g 6
+python3 create_dataset.py -d _newsletters --no-git -l 10 --assign-layout -g 6
 ```
 
 **주요 옵션:**
@@ -85,16 +111,15 @@ python3 create_dataset.py -l 10 --assign-layout -g 6
 ### 예제 1: 기본 사용
 
 ```bash
-python3 create_dataset.py -l 6 --assign-layout
+python3 create_dataset.py -d _newsletters --no-git -l 6 --assign-layout
 ```
 
 출력:
 ```
-📂 git log에서 최근 추가된 newsletter 파일 검색 중... (since: 2024-01-01)
-   발견된 파일: 2개
+📂 _newsletters 디렉토리의 모든 파일 처리 중...
 
-파싱 중: 2025-10-21-blog-sample.md (추가일: 2025-10-21)
-  → 8개 포스트 발견
+파싱 중: 2025-10-21-test.md
+  → 6개 포스트 발견
 
 📐 레이아웃 할당: Wide 2개, Grid 4개
 
@@ -150,7 +175,7 @@ python3 create_dataset.py -l 10 --assign-layout -g 6
 
 1. **Featured 우선**: `tags`에 `"featured"`가 있으면 무조건 `layout: "wide"`
 2. **일반 포스트**: grid_size개씩 묶어서, 각 그룹 앞에 1개를 `wide`로 배치
-3. **Wide-section 자동 인식**: Newsletter 파일의 `<div class="featured-post">`에 있는 포스트는 자동으로 `tags: ["featured"]` 추가
+3. **Front matter 기반**: Newsletter 파일의 front matter에서 posts 배열을 파싱
 
 ## 요구사항
 

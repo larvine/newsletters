@@ -1,10 +1,10 @@
 [
   {
-    "file": "_newsletters/2025-10-21-blog-sample.md",
+    "file": "_newsletters/2025-10-21-test.md",
+    "title": "Featured Post Example",
+    "url": "https://github.com/example/repo/pull/1",
     "image": "/assets/images/default-newsletter.png",
-    "title": "Update resources.md",
-    "date": "2025-10-06T09:08:54Z",
-    "url": "https://github.com/jekyll/jekyll/pull/9880",
+    "date": "2025-10-21T10:00:00Z",
     "newsletter_type": "blog",
     "tags": [
       "featured"
@@ -12,51 +12,51 @@
     "layout": "wide"
   },
   {
-    "file": "_newsletters/2025-10-21-blog-sample.md",
+    "file": "_newsletters/2025-10-21-test.md",
+    "title": "Regular Post 1",
+    "url": "https://github.com/example/repo/issues/2",
     "image": "/assets/images/default-newsletter.png",
-    "title": "[Bug]: Wildcard patterns in `exclude` don't work for collection files",
-    "date": "2025-10-02T17:25:05Z",
-    "url": "https://github.com/jekyll/jekyll/issues/9879",
+    "date": "2025-10-20T10:00:00Z",
     "newsletter_type": "blog",
     "tags": [],
     "layout": "wide"
   },
   {
-    "file": "_newsletters/2025-10-21-blog-sample.md",
+    "file": "_newsletters/2025-10-21-test.md",
+    "title": "Regular Post 2",
+    "url": "https://github.com/example/repo/pull/3",
     "image": "/assets/images/default-newsletter.png",
-    "title": "Update 07-assets.md",
-    "date": "2025-09-18T21:01:45Z",
-    "url": "https://github.com/jekyll/jekyll/pull/9876",
+    "date": "2025-10-19T10:00:00Z",
     "newsletter_type": "blog",
     "tags": [],
     "layout": "grid"
   },
   {
-    "file": "_newsletters/2025-10-21-blog-sample.md",
+    "file": "_newsletters/2025-10-21-test.md",
+    "title": "Regular Post 3",
+    "url": "https://github.com/example/repo/pull/4",
     "image": "/assets/images/default-newsletter.png",
-    "title": "docs: add CloudRay to Deployment Guide",
-    "date": "2025-08-30T22:15:32Z",
-    "url": "https://github.com/jekyll/jekyll/pull/9870",
+    "date": "2025-10-18T10:00:00Z",
     "newsletter_type": "blog",
     "tags": [],
     "layout": "grid"
   },
   {
-    "file": "_newsletters/2025-10-21-blog-sample.md",
+    "file": "_newsletters/2025-10-21-test.md",
+    "title": "Regular Post 4",
+    "url": "https://github.com/example/repo/issues/5",
     "image": "/assets/images/default-newsletter.png",
-    "title": "fix: change to cmd/c start toopen browser on Win.",
-    "date": "2025-08-30T12:01:42Z",
-    "url": "https://github.com/jekyll/jekyll/pull/9869",
+    "date": "2025-10-17T10:00:00Z",
     "newsletter_type": "blog",
     "tags": [],
     "layout": "grid"
   },
   {
-    "file": "_newsletters/2025-10-21-blog-sample.md",
-    "image": "https://github.com/user-attachments/assets/66eb5f2e-eb35-4105-a7bc-dfe3aeebedb5",
-    "title": "ReDoS Vulnerability in Jekyll LiveReload CSS URL Parsing",
-    "date": "2025-08-27T02:49:16Z",
-    "url": "https://github.com/jekyll/jekyll/issues/9868",
+    "file": "_newsletters/2025-10-21-test.md",
+    "title": "Regular Post 5",
+    "url": "https://github.com/example/repo/pull/6",
+    "image": "/assets/images/default-newsletter.png",
+    "date": "2025-10-16T10:00:00Z",
     "newsletter_type": "blog",
     "tags": [],
     "layout": "grid"
