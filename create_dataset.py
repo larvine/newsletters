@@ -146,11 +146,57 @@ def parse_newsletter_file(file_path: Path) -> List[Dict]:
     return posts
 
 
+def assign_layout_types(posts: List[Dict], grid_size: int = 4) -> List[Dict]:
+    """
+    포스트에 레이아웃 타입 할당 (wide 또는 grid)
+    4개씩 grid에 배치하고, 그 전에 하나씩 wide로 배치
+    
+    Args:
+        posts: 포스트 리스트
+        grid_size: Grid에 배치할 포스트 개수 (기본: 4)
+    
+    Returns:
+        레이아웃 타입이 추가된 포스트 리스트
+    """
+    result = []
+    remaining = posts.copy()
+    
+    while remaining:
+        # Wide 영역에 1개 배치 (포스트가 grid_size보다 많을 때만)
+        if len(remaining) > grid_size:
+            post = remaining.pop(0)
+            post['layout'] = 'wide'
+            result.append(post)
+            
+            # Grid 영역에 grid_size개 배치
+            for _ in range(min(grid_size, len(remaining))):
+                post = remaining.pop(0)
+                post['layout'] = 'grid'
+                result.append(post)
+        else:
+            # 남은 포스트가 적으면
+            if len(remaining) >= 2:
+                # 2개 이상이면 첫 번째를 wide로
+                post = remaining.pop(0)
+                post['layout'] = 'wide'
+                result.append(post)
+            
+            # 나머지는 grid로
+            for post in remaining:
+                post['layout'] = 'grid'
+                result.append(post)
+            remaining = []
+    
+    return result
+
+
 def create_dataset(newsletters_dir: str = '_newsletters', 
                    output_file: str = 'newsletter_dataset.json',
                    limit: int = None,
                    use_git: bool = True,
-                   since: str = "2024-01-01") -> List[Dict]:
+                   since: str = "2024-01-01",
+                   grid_size: int = 4,
+                   assign_layout: bool = False) -> List[Dict]:
     """
     Newsletter 파일들을 파싱하여 JSON 데이터셋 생성
     
@@ -208,6 +254,13 @@ def create_dataset(newsletters_dir: str = '_newsletters',
     if limit:
         all_posts = all_posts[:limit]
     
+    # 레이아웃 타입 할당
+    if assign_layout:
+        all_posts = assign_layout_types(all_posts, grid_size)
+        wide_count = sum(1 for p in all_posts if p.get('layout') == 'wide')
+        grid_count = sum(1 for p in all_posts if p.get('layout') == 'grid')
+        print(f"\n📐 레이아웃 할당: Wide {wide_count}개, Grid {grid_count}개")
+    
     # JSON 파일로 저장
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(all_posts, f, ensure_ascii=False, indent=2)
@@ -260,6 +313,17 @@ if __name__ == '__main__':
         default='2024-01-01',
         help='git log 사용시 이 날짜 이후의 파일만 (기본값: 2024-01-01)'
     )
+    parser.add_argument(
+        '--assign-layout',
+        action='store_true',
+        help='각 포스트에 레이아웃 타입(wide/grid) 할당'
+    )
+    parser.add_argument(
+        '-g', '--grid-size',
+        type=int,
+        default=4,
+        help='Grid 영역에 배치할 포스트 개수 (기본값: 4)'
+    )
     
     args = parser.parse_args()
     
@@ -268,5 +332,7 @@ if __name__ == '__main__':
         output_file=args.output,
         limit=args.limit,
         use_git=not args.no_git,
-        since=args.since
+        since=args.since,
+        grid_size=args.grid_size,
+        assign_layout=args.assign_layout
     )
