@@ -1,0 +1,50 @@
+[
+  {
+    "file": "_newsletters/2025-10-21-blog-sample.md",
+    "image": "/assets/images/default-newsletter.png",
+    "title": "Update resources.md",
+    "date": "2025-10-06T09:08:54Z",
+    "url": "https://github.com/jekyll/jekyll/pull/9880",
+    "newsletter_type": "blog"
+  },
+  {
+    "file": "_newsletters/2025-10-21-blog-sample.md",
+    "image": "/assets/images/default-newsletter.png",
+    "title": "[Bug]: Wildcard patterns in `exclude` don't work for collection files",
+    "date": "2025-10-02T17:25:05Z",
+    "url": "https://github.com/jekyll/jekyll/issues/9879",
+    "newsletter_type": "blog"
+  },
+  {
+    "file": "_newsletters/2025-10-21-blog-sample.md",
+    "image": "https://github.com/user-attachments/assets/66eb5f2e-eb35-4105-a7bc-dfe3aeebedb5",
+    "title": "ReDoS Vulnerability in Jekyll LiveReload CSS URL Parsing",
+    "date": "2025-08-27T02:49:16Z",
+    "url": "https://github.com/jekyll/jekyll/issues/9868",
+    "newsletter_type": "blog"
+  },
+  {
+    "file": "_newsletters/2025-10-21-mosaic-sample.md",
+    "image": "/assets/images/default-newsletter.png",
+    "title": "docs: clarify copilot cli premium request usage",
+    "date": "2025-10-21T05:48:17Z",
+    "url": "https://github.com/github/docs/pull/40928",
+    "newsletter_type": "mosaic"
+  },
+  {
+    "file": "_newsletters/2025-10-21-mosaic-sample.md",
+    "image": "/assets/images/default-newsletter.png",
+    "title": "Add common synonyms",
+    "date": "2025-10-20T10:01:23Z",
+    "url": "https://github.com/github/docs/pull/40918",
+    "newsletter_type": "mosaic"
+  },
+  {
+    "file": "_newsletters/2025-10-21-mosaic-sample.md",
+    "image": "/assets/images/default-newsletter.png",
+    "title": "docs: Add PowerShell v6+ prerequisite for Windows users to Copilot CLI install guide",
+    "date": "2025-10-18T16:00:42Z",
+    "url": "https://github.com/github/docs/pull/40906",
+    "newsletter_type": "mosaic"
+  }
+]
