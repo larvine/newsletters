@@ -85,7 +85,7 @@ def get_recent_files_from_git(pattern: str = "*newsletters/*.md",
 
 
 def parse_front_matter(content: str) -> Dict:
-    """YAML front matter 파싱 (posts 배열 포함)"""
+    """YAML front matter 파싱"""
     front_matter = {}
     
     # --- 사이의 내용 추출
@@ -94,172 +94,50 @@ def parse_front_matter(content: str) -> Dict:
         return front_matter
     
     yaml_content = match.group(1)
-    lines = yaml_content.split('\n')
     
-    current_key = None
-    current_list = []
-    current_item = {}
-    in_list = False
-    
-    for line in lines:
-        line_stripped = line.strip()
-        
-        if not line_stripped:
+    # 간단한 key: value 파싱
+    for line in yaml_content.split('\n'):
+        line = line.strip()
+        if not line or not ':' in line:
             continue
         
-        # 리스트 아이템 시작 (- 로 시작)
-        if line_stripped.startswith('- '):
-            if current_item:
-                current_list.append(current_item)
-            current_item = {}
-            # - 다음에 key: value가 올 수 있음
-            rest = line_stripped[2:].strip()
-            if ':' in rest:
-                k, v = rest.split(':', 1)
-                current_item[k.strip()] = v.strip().strip('"').strip("'")
-        # 들여쓰기된 키:값 (리스트 아이템의 속성)
-        elif line.startswith('  ') and ':' in line_stripped:
-            k, v = line_stripped.split(':', 1)
-            k = k.strip()
-            v = v.strip().strip('"').strip("'")
-            
-            # tags 같은 배열 처리
-            if v.startswith('[') and v.endswith(']'):
-                v = [item.strip().strip('"').strip("'") for item in v[1:-1].split(',') if item.strip()]
-            
-            current_item[k] = v
-        # 일반 키:값
-        elif ':' in line_stripped and not line.startswith('  '):
-            # 이전 리스트 마무리
-            if current_item:
-                current_list.append(current_item)
-                current_item = {}
-            if current_list and current_key:
-                front_matter[current_key] = current_list
-                current_list = []
-            
-            k, v = line_stripped.split(':', 1)
-            current_key = k.strip()
-            v = v.strip().strip('"').strip("'")
-            
-            # 빈 값이면 리스트 시작일 수 있음
-            if not v:
-                in_list = True
-            else:
-                front_matter[current_key] = v
-                current_key = None
-    
-    # 마지막 아이템 처리
-    if current_item:
-        current_list.append(current_item)
-    if current_list and current_key:
-        front_matter[current_key] = current_list
+        # 첫 번째 : 를 기준으로 분리
+        key, value = line.split(':', 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        
+        if value:  # 값이 있을 때만 저장
+            front_matter[key] = value
     
     return front_matter
 
 
 def parse_newsletter_file(file_path: Path) -> List[Dict]:
-    """Newsletter 파일을 파싱하여 포스트 목록 반환"""
+    """Newsletter 파일의 front matter를 파싱하여 데이터 반환"""
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
     
     # Front matter 파싱
     front_matter = parse_front_matter(content)
     
-    # Front matter에 posts가 있으면 그걸 사용
-    if 'posts' in front_matter and isinstance(front_matter['posts'], list):
-        posts = []
-        newsletter_type = front_matter.get('type', 'unknown')
-        
-        for post in front_matter['posts']:
-            post_data = {
-                'file': str(file_path),
-                'title': post.get('title', ''),
-                'url': post.get('url', ''),
-                'image': post.get('image', ''),
-                'date': post.get('date', ''),
-                'newsletter_type': newsletter_type,
-                'tags': post.get('tags', [])
-            }
-            posts.append(post_data)
-        
-        return posts
+    # Front matter 변수들을 그대로 JSON 데이터로 변환
+    data = {
+        'file': str(file_path),
+    }
     
-    # Front matter에 posts가 없으면 빈 리스트 반환
-    return []
-
-
-def assign_layout_types(posts: List[Dict], grid_size: int = 4) -> List[Dict]:
-    """
-    포스트에 레이아웃 타입 할당 (wide 또는 grid)
+    # Front matter의 모든 변수를 데이터에 포함
+    for key, value in front_matter.items():
+        data[key] = value
     
-    로직:
-    1. 'featured' tag가 있는 포스트는 무조건 'wide'
-    2. 나머지는 4개씩 grid에 배치하고, 그 전에 하나씩 wide로 배치
-    
-    Args:
-        posts: 포스트 리스트
-        grid_size: Grid에 배치할 포스트 개수 (기본: 4)
-    
-    Returns:
-        레이아웃 타입이 추가된 포스트 리스트
-    """
-    result = []
-    
-    # 1단계: featured tag가 있는 포스트를 먼저 처리
-    featured_posts = []
-    regular_posts = []
-    
-    for post in posts:
-        tags = post.get('tags', [])
-        if 'featured' in tags:
-            post['layout'] = 'wide'
-            featured_posts.append(post)
-        else:
-            regular_posts.append(post)
-    
-    # 2단계: featured 포스트를 결과에 추가
-    result.extend(featured_posts)
-    
-    # 3단계: 일반 포스트를 레이아웃에 따라 배치
-    remaining = regular_posts.copy()
-    
-    while remaining:
-        # Wide 영역에 1개 배치 (포스트가 grid_size보다 많을 때만)
-        if len(remaining) > grid_size:
-            post = remaining.pop(0)
-            post['layout'] = 'wide'
-            result.append(post)
-            
-            # Grid 영역에 grid_size개 배치
-            for _ in range(min(grid_size, len(remaining))):
-                post = remaining.pop(0)
-                post['layout'] = 'grid'
-                result.append(post)
-        else:
-            # 남은 포스트가 적으면
-            if len(remaining) >= 2:
-                # 2개 이상이면 첫 번째를 wide로
-                post = remaining.pop(0)
-                post['layout'] = 'wide'
-                result.append(post)
-            
-            # 나머지는 grid로
-            for post in remaining:
-                post['layout'] = 'grid'
-                result.append(post)
-            remaining = []
-    
-    return result
+    # 단일 항목을 리스트로 반환 (newsletter 파일 하나 = 하나의 데이터)
+    return [data]
 
 
 def create_dataset(newsletters_dir: str = '_newsletters', 
                    output_file: str = 'newsletter_dataset.json',
                    limit: int = None,
                    use_git: bool = True,
-                   since: str = "2024-01-01",
-                   grid_size: int = 4,
-                   assign_layout: bool = False) -> List[Dict]:
+                   since: str = "2024-01-01") -> List[Dict]:
     """
     Newsletter 파일들을 파싱하여 JSON 데이터셋 생성
     
@@ -317,18 +195,11 @@ def create_dataset(newsletters_dir: str = '_newsletters',
     if limit:
         all_posts = all_posts[:limit]
     
-    # 레이아웃 타입 할당
-    if assign_layout:
-        all_posts = assign_layout_types(all_posts, grid_size)
-        wide_count = sum(1 for p in all_posts if p.get('layout') == 'wide')
-        grid_count = sum(1 for p in all_posts if p.get('layout') == 'grid')
-        print(f"\n📐 레이아웃 할당: Wide {wide_count}개, Grid {grid_count}개")
-    
     # JSON 파일로 저장
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(all_posts, f, ensure_ascii=False, indent=2)
     
-    print(f"\n✅ 총 {len(all_posts)}개의 포스트를 {output_file}에 저장했습니다.")
+    print(f"\n✅ 총 {len(all_posts)}개의 newsletter를 {output_file}에 저장했습니다.")
     
     return all_posts
 
@@ -376,17 +247,6 @@ if __name__ == '__main__':
         default='2024-01-01',
         help='git log 사용시 이 날짜 이후의 파일만 (기본값: 2024-01-01)'
     )
-    parser.add_argument(
-        '--assign-layout',
-        action='store_true',
-        help='각 포스트에 레이아웃 타입(wide/grid) 할당'
-    )
-    parser.add_argument(
-        '-g', '--grid-size',
-        type=int,
-        default=4,
-        help='Grid 영역에 배치할 포스트 개수 (기본값: 4)'
-    )
     
     args = parser.parse_args()
     
@@ -395,7 +255,5 @@ if __name__ == '__main__':
         output_file=args.output,
         limit=args.limit,
         use_git=not args.no_git,
-        since=args.since,
-        grid_size=args.grid_size,
-        assign_layout=args.assign_layout
+        since=args.since
     )

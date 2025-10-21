@@ -1,64 +1,16 @@
 [
   {
-    "file": "_newsletters/2025-10-21-test.md",
-    "title": "Featured Post Example",
-    "url": "https://github.com/example/repo/pull/1",
-    "image": "/assets/images/default-newsletter.png",
-    "date": "2025-10-21T10:00:00Z",
-    "newsletter_type": "blog",
-    "tags": [
-      "featured"
-    ],
-    "layout": "wide"
+    "file": "_newsletters/2025-10-21-mosaic-sample.md",
+    "layout": "newsletter",
+    "title": "GitHub 업데이트",
+    "date": "2025-10-21",
+    "type": "mosaic"
   },
   {
-    "file": "_newsletters/2025-10-21-test.md",
-    "title": "Regular Post 1",
-    "url": "https://github.com/example/repo/issues/2",
-    "image": "/assets/images/default-newsletter.png",
-    "date": "2025-10-20T10:00:00Z",
-    "newsletter_type": "blog",
-    "tags": [],
-    "layout": "wide"
-  },
-  {
-    "file": "_newsletters/2025-10-21-test.md",
-    "title": "Regular Post 2",
-    "url": "https://github.com/example/repo/pull/3",
-    "image": "/assets/images/default-newsletter.png",
-    "date": "2025-10-19T10:00:00Z",
-    "newsletter_type": "blog",
-    "tags": [],
-    "layout": "grid"
-  },
-  {
-    "file": "_newsletters/2025-10-21-test.md",
-    "title": "Regular Post 3",
-    "url": "https://github.com/example/repo/pull/4",
-    "image": "/assets/images/default-newsletter.png",
-    "date": "2025-10-18T10:00:00Z",
-    "newsletter_type": "blog",
-    "tags": [],
-    "layout": "grid"
-  },
-  {
-    "file": "_newsletters/2025-10-21-test.md",
-    "title": "Regular Post 4",
-    "url": "https://github.com/example/repo/issues/5",
-    "image": "/assets/images/default-newsletter.png",
-    "date": "2025-10-17T10:00:00Z",
-    "newsletter_type": "blog",
-    "tags": [],
-    "layout": "grid"
-  },
-  {
-    "file": "_newsletters/2025-10-21-test.md",
-    "title": "Regular Post 5",
-    "url": "https://github.com/example/repo/pull/6",
-    "image": "/assets/images/default-newsletter.png",
-    "date": "2025-10-16T10:00:00Z",
-    "newsletter_type": "blog",
-    "tags": [],
-    "layout": "grid"
+    "file": "_newsletters/2025-10-21-blog-sample.md",
+    "layout": "newsletter",
+    "title": "Jekyll 뉴스레터 예제",
+    "date": "2025-10-21",
+    "type": "blog"
   }
 ]
