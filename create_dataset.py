@@ -125,22 +125,24 @@ def parse_newsletter_file(file_path: Path) -> List[Dict]:
             'title': title.strip(),
             'date': date.strip(),
             'url': url.strip(),
-            'newsletter_type': newsletter_type
+            'newsletter_type': newsletter_type,
+            'tags': []  # 기본값
         })
     
-    # featured-post 패턴
+    # featured-post 패턴 (wide-section에 있는 것은 자동으로 featured tag)
     featured_pattern = r'<div class="featured-post">.*?<a href="([^"]+)">.*?<img src="([^"]+)" alt="([^"]+)">.*?</a>.*?<h2>.*?</h2>.*?<p class="post-date">([^<]+)</p>'
     featured_matches = re.findall(featured_pattern, content, re.DOTALL)
     
     for url, image, title, date in featured_matches:
-        # featured post를 맨 앞에 추가
+        # featured post를 맨 앞에 추가하고 'featured' tag 자동 추가
         posts.insert(0, {
             'file': str(file_path),
             'image': image.strip(),
             'title': title.strip(),
             'date': date.strip(),
             'url': url.strip(),
-            'newsletter_type': newsletter_type
+            'newsletter_type': newsletter_type,
+            'tags': ['featured']  # wide-section에 있으면 featured
         })
     
     return posts
@@ -149,7 +151,10 @@ def parse_newsletter_file(file_path: Path) -> List[Dict]:
 def assign_layout_types(posts: List[Dict], grid_size: int = 4) -> List[Dict]:
     """
     포스트에 레이아웃 타입 할당 (wide 또는 grid)
-    4개씩 grid에 배치하고, 그 전에 하나씩 wide로 배치
+    
+    로직:
+    1. 'featured' tag가 있는 포스트는 무조건 'wide'
+    2. 나머지는 4개씩 grid에 배치하고, 그 전에 하나씩 wide로 배치
     
     Args:
         posts: 포스트 리스트
@@ -159,7 +164,24 @@ def assign_layout_types(posts: List[Dict], grid_size: int = 4) -> List[Dict]:
         레이아웃 타입이 추가된 포스트 리스트
     """
     result = []
-    remaining = posts.copy()
+    
+    # 1단계: featured tag가 있는 포스트를 먼저 처리
+    featured_posts = []
+    regular_posts = []
+    
+    for post in posts:
+        tags = post.get('tags', [])
+        if 'featured' in tags:
+            post['layout'] = 'wide'
+            featured_posts.append(post)
+        else:
+            regular_posts.append(post)
+    
+    # 2단계: featured 포스트를 결과에 추가
+    result.extend(featured_posts)
+    
+    # 3단계: 일반 포스트를 레이아웃에 따라 배치
+    remaining = regular_posts.copy()
     
     while remaining:
         # Wide 영역에 1개 배치 (포스트가 grid_size보다 많을 때만)

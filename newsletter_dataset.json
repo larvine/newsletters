@@ -6,6 +6,9 @@
     "date": "2025-10-06T09:08:54Z",
     "url": "https://github.com/jekyll/jekyll/pull/9880",
     "newsletter_type": "blog",
+    "tags": [
+      "featured"
+    ],
     "layout": "wide"
   },
   {
@@ -15,7 +18,8 @@
     "date": "2025-10-02T17:25:05Z",
     "url": "https://github.com/jekyll/jekyll/issues/9879",
     "newsletter_type": "blog",
-    "layout": "grid"
+    "tags": [],
+    "layout": "wide"
   },
   {
     "file": "_newsletters/2025-10-21-blog-sample.md",
@@ -24,6 +28,7 @@
     "date": "2025-09-18T21:01:45Z",
     "url": "https://github.com/jekyll/jekyll/pull/9876",
     "newsletter_type": "blog",
+    "tags": [],
     "layout": "grid"
   },
   {
@@ -33,6 +38,7 @@
     "date": "2025-08-30T22:15:32Z",
     "url": "https://github.com/jekyll/jekyll/pull/9870",
     "newsletter_type": "blog",
+    "tags": [],
     "layout": "grid"
   },
   {
@@ -42,6 +48,7 @@
     "date": "2025-08-30T12:01:42Z",
     "url": "https://github.com/jekyll/jekyll/pull/9869",
     "newsletter_type": "blog",
+    "tags": [],
     "layout": "grid"
   },
   {
@@ -51,6 +58,7 @@
     "date": "2025-08-27T02:49:16Z",
     "url": "https://github.com/jekyll/jekyll/issues/9868",
     "newsletter_type": "blog",
+    "tags": [],
     "layout": "grid"
   }
 ]

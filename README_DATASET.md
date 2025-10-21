@@ -1,40 +1,34 @@
 # Newsletter Dataset Generator
 
-Newsletter 파일들을 파싱하여 JSON 형식의 데이터셋을 생성하고, 데이터셋으로부터 새로운 newsletter를 생성하는 도구 모음입니다.
+Newsletter 파일들을 파싱하여 JSON 형식의 데이터셋을 생성하는 도구입니다.
 
-## 도구 목록
+## 주요 기능
 
-### 1. `create_dataset.py` - 데이터셋 생성
+### `create_dataset.py`
+
 - **git log 기반 파일 검색**: 최근에 merge된 newsletter 파일을 자동으로 찾기
 - `_newsletters` 디렉토리의 마크다운 파일을 자동으로 파싱
-- HTML 콘텐츠에서 포스트 정보 추출 (제목, URL, 이미지, 날짜)
+- HTML 콘텐츠에서 포스트 정보 추출 (제목, URL, 이미지, 날짜, tags)
 - JSON 형식으로 데이터셋 생성
-- **레이아웃 타입 자동 할당**: 4개씩 grid, 나머지는 wide로 구분
-
-### 2. `create_newsletter_from_git.sh` - 원클릭 자동화
-- git log → 레이아웃 할당된 데이터셋 생성
-- 간편한 쉘 스크립트 인터페이스
+- **스마트 레이아웃 할당**:
+  - `featured` tag가 있는 포스트 → 자동으로 `wide` 레이아웃
+  - 나머지 포스트 → 4개씩 grid, 그 사이에 wide 배치
 
 ## 사용법
 
-### 🚀 빠른 시작 (권장)
+## 사용법
+
+### 기본 사용
 
 ```bash
 # 레이아웃이 할당된 데이터셋 생성
-./create_newsletter_from_git.sh -l 6 -g 4
-```
-
-### 📝 수동 사용
-
-```bash
-# 레이아웃 타입 포함하여 데이터셋 생성
-python3 create_dataset.py -l 6 --assign-layout -g 4
+python3 create_dataset.py -l 6 --assign-layout
 
 # 2024-10-01 이후 추가된 파일만
 python3 create_dataset.py -s 2024-10-01 --assign-layout
 
-# git 사용하지 않고 디렉토리 전체
-python3 create_dataset.py --no-git --assign-layout
+# Grid 크기 커스터마이징
+python3 create_dataset.py -l 10 --assign-layout -g 6
 ```
 
 **주요 옵션:**
@@ -57,6 +51,7 @@ python3 create_dataset.py --no-git --assign-layout
     "date": "2025-10-06T09:08:54Z",
     "url": "https://github.com/jekyll/jekyll/pull/9880",
     "newsletter_type": "blog",
+    "tags": ["featured"],
     "layout": "wide"
   },
   {
@@ -66,6 +61,7 @@ python3 create_dataset.py --no-git --assign-layout
     "date": "2025-10-02T17:25:05Z",
     "url": "https://github.com/jekyll/jekyll/issues/9879",
     "newsletter_type": "blog",
+    "tags": [],
     "layout": "grid"
   }
 ]
@@ -79,39 +75,36 @@ python3 create_dataset.py --no-git --assign-layout
 - `date`: 포스트 날짜 (ISO 8601 형식)
 - `url`: 포스트 링크 URL
 - `newsletter_type`: Newsletter 타입 (blog, mosaic 등)
+- `tags`: 태그 배열 (wide-section에 있으면 `["featured"]` 자동 추가)
 - `layout`: 레이아웃 타입 (`wide` 또는 `grid`) - `--assign-layout` 사용시
 
 ## 예제
 
-### 예제 1: 기본 워크플로우 (자동화)
+## 예제
+
+### 예제 1: 기본 사용
 
 ```bash
-# 레이아웃이 할당된 데이터셋 생성
-./create_newsletter_from_git.sh -l 6 -g 4
+python3 create_dataset.py -l 6 --assign-layout
 ```
 
 출력:
 ```
-🚀 Newsletter 데이터셋 생성 시작...
-
-📂 git log에서 최근 추가된 newsletter 파일 검색 중... (since: 2024-10-01)
+📂 git log에서 최근 추가된 newsletter 파일 검색 중... (since: 2024-01-01)
    발견된 파일: 2개
 
 파싱 중: 2025-10-21-blog-sample.md (추가일: 2025-10-21)
   → 8개 포스트 발견
 
-📐 레이아웃 할당: Wide 1개, Grid 5개
+📐 레이아웃 할당: Wide 2개, Grid 4개
 
 ✅ 총 6개의 포스트를 newsletter_dataset.json에 저장했습니다.
-
-✅ 완료!
-   생성된 파일: newsletter_dataset.json
 ```
 
-**레이아웃 구조 (6개 포스트, grid-size=4):**
-- 1번 포스트 → `"layout": "wide"` (Featured 영역)
-- 2~5번 포스트 → `"layout": "grid"` (Grid 영역 4개)
-- 6번 포스트 → `"layout": "grid"` (Grid 영역 1개)
+**레이아웃 로직:**
+1. `featured` tag가 있는 포스트 → `wide` (1개)
+2. 일반 포스트 중 첫 번째 → `wide` (1개)
+3. 나머지 → `grid` (4개)
 
 ### 예제 2: 템플릿에서 사용
 
@@ -143,14 +136,21 @@ python3 create_dataset.py --no-git --assign-layout
 
 ```bash
 # 6개씩 grid에 배치
-./create_newsletter_from_git.sh -l 10 -g 6
+python3 create_dataset.py -l 10 --assign-layout -g 6
 ```
 
-**레이아웃 구조 (10개 포스트, grid-size=6):**
-- 1번 포스트 → `"layout": "wide"`
-- 2~7번 포스트 → `"layout": "grid"` (6개)
-- 8번 포스트 → `"layout": "wide"`
-- 9~10번 포스트 → `"layout": "grid"` (2개)
+**레이아웃 구조 (10개 포스트, grid-size=6, featured 1개):**
+- Featured 포스트 1개 → `wide`
+- 일반 포스트 1개 → `wide`
+- 일반 포스트 6개 → `grid`
+- 일반 포스트 1개 → `wide`
+- 일반 포스트 1개 → `grid`
+
+## 레이아웃 할당 규칙
+
+1. **Featured 우선**: `tags`에 `"featured"`가 있으면 무조건 `layout: "wide"`
+2. **일반 포스트**: grid_size개씩 묶어서, 각 그룹 앞에 1개를 `wide`로 배치
+3. **Wide-section 자동 인식**: Newsletter 파일의 `<div class="featured-post">`에 있는 포스트는 자동으로 `tags: ["featured"]` 추가
 
 ## 요구사항
 
