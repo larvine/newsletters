@@ -1,69 +1,5 @@
 [
   {
-    "file": "_newsletters/2025-10-21-mosaic-sample.md",
-    "image": "/assets/images/default-newsletter.png",
-    "title": "docs: clarify copilot cli premium request usage",
-    "date": "2025-10-21T05:48:17Z",
-    "url": "https://github.com/github/docs/pull/40928?mtm_campaign=newsletter&mtm_source=mosaic",
-    "newsletter_type": "mosaic"
-  },
-  {
-    "file": "_newsletters/2025-10-21-mosaic-sample.md",
-    "image": "/assets/images/default-newsletter.png",
-    "title": "Add common synonyms",
-    "date": "2025-10-20T10:01:23Z",
-    "url": "https://github.com/github/docs/pull/40918?mtm_campaign=newsletter&mtm_source=mosaic",
-    "newsletter_type": "mosaic"
-  },
-  {
-    "file": "_newsletters/2025-10-21-mosaic-sample.md",
-    "image": "/assets/images/default-newsletter.png",
-    "title": "docs: Add PowerShell v6+ prerequisite for Windows users to Copilot CLI install guide",
-    "date": "2025-10-18T16:00:42Z",
-    "url": "https://github.com/github/docs/pull/40906?mtm_campaign=newsletter&mtm_source=mosaic",
-    "newsletter_type": "mosaic"
-  },
-  {
-    "file": "_newsletters/2025-10-21-mosaic-sample.md",
-    "image": "/assets/images/default-newsletter.png",
-    "title": "Added ETP guidance issues on Codespaces documentation",
-    "date": "2025-10-18T00:41:23Z",
-    "url": "https://github.com/github/docs/pull/40902?mtm_campaign=newsletter&mtm_source=mosaic",
-    "newsletter_type": "mosaic"
-  },
-  {
-    "file": "_newsletters/2025-10-21-mosaic-sample.md",
-    "image": "/assets/images/default-newsletter.png",
-    "title": "Premium features for Copilot CLI are confusing",
-    "date": "2025-10-17T15:41:40Z",
-    "url": "https://github.com/github/docs/issues/40897?mtm_campaign=newsletter&mtm_source=mosaic",
-    "newsletter_type": "mosaic"
-  },
-  {
-    "file": "_newsletters/2025-10-21-mosaic-sample.md",
-    "image": "/assets/images/default-newsletter.png",
-    "title": "Add API Center MCP registry URL",
-    "date": "2025-10-17T05:36:58Z",
-    "url": "https://github.com/github/docs/pull/40895?mtm_campaign=newsletter&mtm_source=mosaic",
-    "newsletter_type": "mosaic"
-  },
-  {
-    "file": "_newsletters/2025-10-21-mosaic-sample.md",
-    "image": "/assets/images/default-newsletter.png",
-    "title": "API Center MCP register URL is hard to know",
-    "date": "2025-10-17T05:35:26Z",
-    "url": "https://github.com/github/docs/issues/40894?mtm_campaign=newsletter&mtm_source=mosaic",
-    "newsletter_type": "mosaic"
-  },
-  {
-    "file": "_newsletters/2025-10-21-mosaic-sample.md",
-    "image": "/assets/images/default-newsletter.png",
-    "title": "Contain an incorrect link to the billing overview page in Chinese Page",
-    "date": "2025-10-17T02:10:45Z",
-    "url": "https://github.com/github/docs/issues/40891?mtm_campaign=newsletter&mtm_source=mosaic",
-    "newsletter_type": "mosaic"
-  },
-  {
     "file": "_newsletters/2025-10-21-blog-sample.md",
     "image": "/assets/images/default-newsletter.png",
     "title": "Update resources.md",
@@ -109,22 +45,6 @@
     "title": "ReDoS Vulnerability in Jekyll LiveReload CSS URL Parsing",
     "date": "2025-08-27T02:49:16Z",
     "url": "https://github.com/jekyll/jekyll/issues/9868",
-    "newsletter_type": "blog"
-  },
-  {
-    "file": "_newsletters/2025-10-21-blog-sample.md",
-    "image": "/assets/images/default-newsletter.png",
-    "title": "[Docs]:",
-    "date": "2025-08-24T21:50:43Z",
-    "url": "https://github.com/jekyll/jekyll/issues/9866",
-    "newsletter_type": "blog"
-  },
-  {
-    "file": "_newsletters/2025-10-21-blog-sample.md",
-    "image": "/assets/images/default-newsletter.png",
-    "title": "Adding blog/marketing site to showcase; removing unreachable elements",
-    "date": "2025-08-22T15:53:55Z",
-    "url": "https://github.com/jekyll/jekyll/pull/9865",
     "newsletter_type": "blog"
   }
 ]
