@@ -1,0 +1,35 @@
+# Jekyll Newsletter Configuration
+
+# Site settings
+title: Newsletter
+description: Automated newsletter generation from GitHub posts
+baseurl: ""
+url: ""
+
+# Build settings
+markdown: kramdown
+permalink: pretty
+
+# Collections
+collections:
+  newsletters:
+    output: true
+    permalink: /newsletters/:path/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "newsletters"
+    values:
+      layout: "newsletter"
+
+# Exclude from processing
+exclude:
+  - generate_newsletter.py
+  - requirements.txt
+  - README.md
+  - .git
+  - .gitignore
+  - venv
+  - __pycache__
